@@ -8,12 +8,9 @@ import { useState } from 'react';
 function Content() {
   const [mockData, setMockData] = useState([]);
   const onTaskTextChanges = (e , i) => {
-    console.log('E' , e)
-    console.log('E' , i)
     const valueAtIndex = mockData[i];
     valueAtIndex.text = e;
     setMockData(mockData);
-    console.log('mockData' , mockData)
 
   }
   const createTaskHandler = () => {
@@ -21,7 +18,7 @@ function Content() {
     
     const newData = { 
         id : mockData.length + 1,
-        text : 'test',
+        text : '',
         done : false
     }
     setMockData([...mockData , newData])

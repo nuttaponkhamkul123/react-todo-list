@@ -1,15 +1,18 @@
+
+import styles from './style.module.css';
+
+
 function Task(props) {
   const onTaskTextChanges = (event) => {
     const text = event.currentTarget.textContent;
-    // console.log('sdasdasdasd' , )
      props.onTaskTextChanges(text , props.index);
     console.log('props' ,)
   }
     return (
     <>
-    <div className="task-card">
+    <div className={styles['task-card']}>
 
-      text : <span contentEditable="true" onInput={onTaskTextChanges}>{ props.text }</span>
+      text : <span contentEditable="true" onInput={onTaskTextChanges} className="task-input">{ props.text }</span>
     </div>
     </>
   )
