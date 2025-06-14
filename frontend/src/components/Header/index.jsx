@@ -8,7 +8,7 @@ function Header() {
   return (
     <>
       <div className={styles.header}>
-      TODO list test
+        Task-Tamerizer
 
       </div>
     </>

@@ -11,12 +11,12 @@ function App() {
 
   return (
     <>
-    <div className="test">
+      <div className="outer">
 
-      <Header/>
-      <Content />
+        <Header />
+        <Content />
 
-    </div>
+      </div>
     </>
   )
 }

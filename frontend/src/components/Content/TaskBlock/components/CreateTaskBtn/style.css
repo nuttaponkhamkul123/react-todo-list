@@ -1,0 +1,8 @@
+.create-task-btn {
+    padding: 5%;
+    border: none;
+    background: green;
+    position: sticky;
+    bottom: 0;
+
+}
