@@ -10,7 +10,7 @@ function CreateTaskBtn({ onAddTask }) {
     }
     return (
         <>
-            <button className="create-task-btn" onClick={addTask}>Create task</button>
+            <button className="create-task-btn" onClick={addTask}>+</button>
         </>
     )
 }

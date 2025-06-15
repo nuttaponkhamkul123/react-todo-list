@@ -7,7 +7,7 @@ import { useState } from 'react';
 import styles from './style.module.css';
 
 
-function Content() {
+function Content({ activeId }) {
   const [mockData, setMockData] = useState([]);
   const [mockTaskData, setMockTaskData] = useState([]);
 
@@ -20,13 +20,11 @@ function Content() {
     const newData = {
       id: mockTaskData[matchedIndex].tasks.length + 1,
       text: '',
-      done: false
+      // done: false
     }
     mockTaskData[matchedIndex].tasks.push(newData);
     setMockTaskData([...mockTaskData])
 
-    console.log('AAA ::: ', a)
-    console.log('mockTaskData', mockTaskData)
   }
 
   const addTaskBlockHandler = () => {
@@ -45,7 +43,7 @@ function Content() {
     <>
       <div className={styles['task-blocks']}>
         {mockTaskData.map((taskBlockData, blockIndex) => (
-          <TaskBlock key={blockIndex} taskData={taskBlockData} onAddTask={addTaskHandler} />
+          <TaskBlock key={blockIndex} blockId={blockIndex} taskData={taskBlockData} onAddTask={addTaskHandler} activeId={activeId} />
         )
         )
         }

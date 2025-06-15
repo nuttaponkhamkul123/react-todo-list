@@ -2,7 +2,16 @@
     padding: 5%;
     border: none;
     background: green;
+    color: white;
+    border-radius: 8px;
     position: sticky;
     bottom: 0;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
 
 }
