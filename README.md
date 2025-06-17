@@ -1,6 +1,6 @@
 # React To-Do List
 
----
+
 
 This project is an experimental endeavor to **rebuild an existing to-do list application, originally developed in Angular, using React**. It serves as a practical exercise in understanding and applying the fundamental concepts of React, particularly for developers familiar with other front-end frameworks like Angular.
 
