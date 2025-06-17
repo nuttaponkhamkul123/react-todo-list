@@ -62,20 +62,22 @@ function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
                     {taskData.tasks.map((data, index) =>
                     (
                         <div>
+                            <div key={taskData.id + '_' + index}>
+                            {activeId === taskData.id + '_' + index ? null : <Task text={taskData.text} id={taskData.id + '_' + index} />}
+                            {/* <Task text={taskData.text} id={index} /> */}
+                            </div>
+                        </div>
+                    )
 
-                            <Task text={taskData.text} id={index} />
-
-                            <DragOverlay>
-                                {activeId ?
-                                    (<Task text={taskData.text} id={index} />) : null
+                    
+                    )}
+                    {/* <DragOverlay>
+                                {activeId > -1 ?
+                                    (<Task text={taskData.tasks.find(x => taskData.id + '_' + x.id === activeId)?.text || null} id={activeId} />) : null
                                 }
 
 
-                            </DragOverlay>
-
-                        </div>
-                    )
-                    )}
+                            </DragOverlay> */}
 
 
 

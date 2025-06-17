@@ -4,7 +4,7 @@
 import './App.css'
 import Header from './components/Header'
 import Content from './components/Content'
-import { useDroppable, DndContext, useSensor, PointerSensor, KeyboardSensor, closestCenter, useSensors } from '@dnd-kit/core';
+import { useDroppable, DndContext, useSensor, PointerSensor, KeyboardSensor, closestCenter, useSensors, DragOverlay } from '@dnd-kit/core';
 import { useState } from 'react';
 
 
@@ -19,6 +19,7 @@ function App() {
 
 
   function handleDragStart(event) {
+    console.log('event.active.id' , event.active.id)
     setActiveId(event.active.id);
   }
 
@@ -40,6 +41,16 @@ function App() {
           onDragStart={handleDragStart} onDragEnd={handleDragEnd}
         >
           <Content activeId={activeId} />
+
+
+          <DragOverlay>
+            {/* <Task text={taskData.tasks.find(x => taskData.id + '_' + x.id === activeId)?.text || null} id={activeId} /> */}
+                                {activeId > -1 ?
+                                   (<div>123</div>) : null
+                                }
+
+
+                            </DragOverlay>
         </DndContext>
 
       </div>
