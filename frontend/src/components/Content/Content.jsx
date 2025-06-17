@@ -1,14 +1,14 @@
 // import './style.css'
 
-import CreateTaskBlockBtn from './CreateTaskBlockBtn';
-import TaskBlock from './TaskBlock';
+import CreateTaskBlockBtn from './CreateTaskBlockBtn/CreateTaskBlockBtn';
+import TaskBlock from './TaskBlock/TaskBlock';
 
 import { useState } from 'react';
 import styles from './style.module.css';
 
 
 function Content({ activeId }) {
-  const [mockData, setMockData] = useState([]);
+  // const [mockData, setMockData] = useState([]);
   const [mockTaskData, setMockTaskData] = useState([]);
 
 

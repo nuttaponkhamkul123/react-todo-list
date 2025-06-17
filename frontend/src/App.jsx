@@ -2,9 +2,9 @@
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
-import Header from './components/Header'
-import Content from './components/Content'
-import { useDroppable, DndContext, useSensor, PointerSensor, KeyboardSensor, closestCenter, useSensors, DragOverlay } from '@dnd-kit/core';
+import Header from './components/Header/Header'
+import Content from './components/Content/Content'
+import { DndContext, useSensor, PointerSensor, KeyboardSensor, closestCenter, useSensors, DragOverlay } from '@dnd-kit/core';
 import { useState } from 'react';
 
 

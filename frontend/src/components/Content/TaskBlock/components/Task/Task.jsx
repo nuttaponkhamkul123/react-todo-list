@@ -8,7 +8,7 @@ import { useDraggable } from '@dnd-kit/core';
 
 function Task(props) {
   const [isCardFocusing, setIsCardFocusing] = useState(false);
-  const { attributes, listeners, setNodeRef, transform , isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: props.id,
     enabled: !isCardFocusing,
     
@@ -18,6 +18,7 @@ function Task(props) {
   } : undefined;
   // const style = {};
 
+  // eslint-disable-next-line no-unused-vars
   const onTaskTextChanges = (event) => {
     console.log('HELLO WORLD')
     // const text = event.currentTarget.textContent;

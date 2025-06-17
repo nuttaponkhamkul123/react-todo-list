@@ -1,24 +1,21 @@
 // import './style.css'
-import Task from './components/Task';
-import CreateTaskBtn from './components/CreateTaskBtn';
+import Task from './components/Task/Task';
+import CreateTaskBtn from './components/CreateTaskBtn/CreateTaskBtn';
 import './style.css';
 import {
     DndContext,
-    closestCenter,
     KeyboardSensor,
     PointerSensor,
-    useSensor,
-    useSensors,
     DragOverlay,
     useDroppable
 } from '@dnd-kit/core';
-import { useState } from 'react';
+// import { useState } from 'react';
 // import styles from './style.module.css';
 
 
 function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
-    const [isDragging, setIsDragging] = useState(false);
-    const { isOver, setNodeRef } = useDroppable({
+    // const [isDragging, setIsDragging] = useState(false);
+    const {  setNodeRef } = useDroppable({
         id: blockId,
     });
     const onBlockNameChanges = () => {
@@ -28,23 +25,23 @@ function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
     const addTask = () => {
         onAddTask(taskData);
     }
-    function handleDragEnd(e) {
-        // const { active, over } = event;
-        setIsDragging(false);
+    // function handleDragEnd(e) {
+    //     // const { active, over } = event;
+    //     setIsDragging(false);
 
-    }
-    function handleDragStart(e) {
-        console.log('SET IS DRAGGING TRUE')
-        setIsDragging(true);
-    }
-    const findTaskById = (id) => {
-        const foundTask = taskData.tasks.find(task => task.id === id);
-        if (foundTask) {
-            return foundTask;
-        }
+    // }
+    // function handleDragStart(e) {
+    //     console.log('SET IS DRAGGING TRUE')
+    //     setIsDragging(true);
+    // }
+    // const findTaskById = (id) => {
+    //     const foundTask = taskData.tasks.find(task => task.id === id);
+    //     if (foundTask) {
+    //         return foundTask;
+    //     }
 
-        return null;
-    };
+    //     return null;
+    // };
 
     return (
         <>
