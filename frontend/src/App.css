@@ -1,9 +1,19 @@
+body {
+  background: linear-gradient(41deg, #525351, #203246);
+  background-size: 120% 120%;
+  animation: gradient-animation 2s ease infinite;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
   height: 100vh;
+
+
+  /* &.gradient-background {
+  } */
 }
 
 .logo {
@@ -21,6 +31,21 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .outer {
   display: flex;
   flex-flow: column;
@@ -28,6 +53,8 @@
   max-height: 80%;
   height: 100%;
   overflow-y: auto;
+
+
 }
 
 @keyframes logo-spin {

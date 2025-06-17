@@ -5,6 +5,11 @@
     border-radius: 8px;
     min-height: 1em;
     display: flex;
+
+    &.dragging {
+        background: white;
+    }
+
     /* max-height: 2rem; */
 
 

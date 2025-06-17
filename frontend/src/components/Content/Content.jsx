@@ -28,7 +28,6 @@ function Content({ activeId }) {
   }
 
   const addTaskBlockHandler = () => {
-    console.log("CREATE TASK BLOCK FROM PARENT")
     const newData = {
       id: mockTaskData.length + 1,
       blockName: 'untitled',
@@ -43,6 +42,7 @@ function Content({ activeId }) {
     <>
       <div className={styles['task-blocks']}>
         {mockTaskData.map((taskBlockData, blockIndex) => (
+
           <TaskBlock key={blockIndex} blockId={blockIndex} taskData={taskBlockData} onAddTask={addTaskHandler} activeId={activeId} />
         )
         )

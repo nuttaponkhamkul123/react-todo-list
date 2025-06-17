@@ -19,7 +19,8 @@ function App() {
 
 
   function handleDragStart(event) {
-    console.log('event.active.id' , event.active.id)
+    console.log('event.active.id', event.active.id)
+    console.log('event', event)
     setActiveId(event.active.id);
   }
 
@@ -32,7 +33,7 @@ function App() {
   // onDragEnd={handleDragEnd}
   return (
     <>
-      <div className="outer">
+      <div className="outer ">
         {/* onDragStart={handleDragStart} */}
         <Header />
         <DndContext
@@ -42,15 +43,16 @@ function App() {
         >
           <Content activeId={activeId} />
 
-
           <DragOverlay>
             {/* <Task text={taskData.tasks.find(x => taskData.id + '_' + x.id === activeId)?.text || null} id={activeId} /> */}
-                                {activeId > -1 ?
-                                   (<div>123</div>) : null
-                                }
+            {activeId > -1 ?
+              // (<Task text={taskData.tasks.find(x => taskData.id + '_' + x.id === activeId)?.text || null} id={activeId} />) : null
+              (<div style="background:red;width:50px;height:50px;">HELLO WORLD</div>) : null
+
+            }
 
 
-                            </DragOverlay>
+          </DragOverlay>
         </DndContext>
 
       </div>

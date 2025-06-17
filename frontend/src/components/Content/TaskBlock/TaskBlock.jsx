@@ -15,7 +15,7 @@ import {
 
 function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
     // const [isDragging, setIsDragging] = useState(false);
-    const {  setNodeRef } = useDroppable({
+    const { setNodeRef } = useDroppable({
         id: blockId,
     });
     const onBlockNameChanges = () => {
@@ -48,9 +48,9 @@ function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
 
 
             <div className='task-block'>
-                <div className="title" contentEditable="true" onInput={onBlockNameChanges}>
+                <div className="title" >
 
-                    {taskData.blockName}
+                    <div contentEditable="true" onInput={onBlockNameChanges}>{taskData.blockName}</div>
                     <CreateTaskBtn onAddTask={addTask} />
 
                 </div>
@@ -60,13 +60,14 @@ function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
                     (
                         <div>
                             <div key={taskData.id + '_' + index}>
-                            {activeId === taskData.id + '_' + index ? null : <Task text={taskData.text} id={taskData.id + '_' + index} />}
-                            {/* <Task text={taskData.text} id={index} /> */}
+                                {/* {activeId === taskData.id + '_' + index ? null : <Task text={taskData.text} id={taskData.id + '_' + index} />} */}
+                                <Task text={taskData.text} id={taskData.id + '_' + index} />
+                                {/* <Task text={taskData.text} id={index} /> */}
                             </div>
                         </div>
                     )
 
-                    
+
                     )}
                     {/* <DragOverlay>
                                 {activeId > -1 ?

@@ -1,6 +1,7 @@
 .task-block {
     width: 200px;
     border: 1px solid grey;
+    background: white;
     border-radius: 10px;
     padding: 1% 0;
     margin: 1% 0;
@@ -13,14 +14,18 @@
     position: relative;
 
     >.title {
+        display: grid;
+        grid-template-columns: 60% 40%;
         width: 100%;
         font-size: 1.25rem;
         position: sticky;
         top: -2%;
-        background: white;
+        /* background: white; */
         margin-bottom: 1rem;
         display: flex;
         justify-content: space-between;
+        text-overflow: ellipsis;
+        ;
     }
 
     >.tasks {

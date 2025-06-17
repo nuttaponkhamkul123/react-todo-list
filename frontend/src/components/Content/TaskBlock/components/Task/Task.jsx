@@ -8,14 +8,23 @@ import { useDraggable } from '@dnd-kit/core';
 
 function Task(props) {
   const [isCardFocusing, setIsCardFocusing] = useState(false);
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: props.id,
     enabled: !isCardFocusing,
-    
+
   });
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
+  // translate3d(${transform.x}px, ${transform.y}px, 0)
+  const style = {
+    position: isDragging ? 'fixed' : "static", // Your fixed position
+    // top: '50px',       // Example top
+    // left: '50px',      // Example left
+    // Apply the transform provided by dnd-kit
+    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    zIndex: isDragging ? 999 : 1, // Bring to front when dragging
+    // padding: '20px',
+    width: isDragging ? '200px' : 'unset',
+    cursor: 'grab',
+  };
   // const style = {};
 
   // eslint-disable-next-line no-unused-vars
@@ -38,7 +47,7 @@ function Task(props) {
   }
   return (
     <>
-      <div ref={setNodeRef} style={style} className="task-card">
+      <div ref={setNodeRef} style={style} className={`task-card ${isDragging ? 'dragging' : ''}`}>
 
         <span   {...listeners} {...attributes}>
           <svg fill="#000000" width="20" height="20" viewBox="0 0 36 36" version="1.1" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
