@@ -24,8 +24,13 @@ function App() {
     setActiveId(event.active.id);
   }
 
-  function handleDragEnd() {
+  function handleDragEnd(event) {
     setActiveId(null);
+    const overOn = event.over;
+    const collisionOver = event.collisions[0];
+
+    console.log('overOn ' , overOn);
+    console.log('collisionOver' , collisionOver)
   }
 
 

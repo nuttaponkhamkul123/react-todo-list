@@ -15,7 +15,7 @@ import {
 
 function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
     // const [isDragging, setIsDragging] = useState(false);
-    const { setNodeRef } = useDroppable({
+    const { setNodeRef , isOver } = useDroppable({
         id: blockId,
     });
     const onBlockNameChanges = () => {
@@ -25,29 +25,11 @@ function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
     const addTask = () => {
         onAddTask(taskData);
     }
-    // function handleDragEnd(e) {
-    //     // const { active, over } = event;
-    //     setIsDragging(false);
-
-    // }
-    // function handleDragStart(e) {
-    //     console.log('SET IS DRAGGING TRUE')
-    //     setIsDragging(true);
-    // }
-    // const findTaskById = (id) => {
-    //     const foundTask = taskData.tasks.find(task => task.id === id);
-    //     if (foundTask) {
-    //         return foundTask;
-    //     }
-
-    //     return null;
-    // };
 
     return (
         <>
 
-
-            <div className='task-block'>
+            <div className={`task-block ${isOver ? 'over' : ''}`}>
                 <div className="title" >
 
                     <div contentEditable="true" onInput={onBlockNameChanges}>{taskData.blockName}</div>
