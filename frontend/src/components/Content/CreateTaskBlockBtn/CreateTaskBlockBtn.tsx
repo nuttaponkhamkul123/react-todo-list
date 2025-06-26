@@ -1,4 +1,6 @@
 import './style.css';
+import { Button } from "@/components/ui/button"
+
 
 
 function CreateTaskBlockBtn({ onAddTaskBlockClick }) {
@@ -8,7 +10,8 @@ function CreateTaskBlockBtn({ onAddTaskBlockClick }) {
     }
     return (
         <>
-            <button className="create-task-block-btn" onClick={addTaskBlock}>Create task block</button>
+            <Button onClick={addTaskBlock}>Create task block</Button>
+            {/* <button className="create-task-block-btn" onClick={addTaskBlock}>Create task block</button> */}
 
 
         </>

@@ -9,6 +9,7 @@ import {
     DragOverlay,
     useDroppable
 } from '@dnd-kit/core';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 // import { useState } from 'react';
 // import styles from './style.module.css';
 
@@ -28,14 +29,13 @@ export function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
 
     return (
         <>
+            <Card className={`task-block ${isOver ? 'over' : ''}`}>
+                <CardHeader className="title" >
 
-            <div className={`task-block ${isOver ? 'over' : ''}`}>
-                <div className="title" >
-
-                    <div contentEditable="true" onInput={onBlockNameChanges}>{taskData.blockName}</div>
+                    <CardTitle contentEditable="true" onInput={onBlockNameChanges}>{taskData.blockName}</CardTitle>
                     <CreateTaskBtn onAddTask={addTask} />
 
-                </div>
+                </CardHeader>
                 <div className="tasks" ref={setNodeRef} >
                     {/* sensors={sensors} */}
                     {taskData.tasks.map((data, index) =>
@@ -64,7 +64,10 @@ export function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
 
 
                 </div>
-            </div>
+
+
+            </Card>
+            
         </>
     )
 }
