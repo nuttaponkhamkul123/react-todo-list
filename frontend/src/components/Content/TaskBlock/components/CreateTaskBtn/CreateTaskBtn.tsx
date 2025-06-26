@@ -14,4 +14,5 @@ function CreateTaskBtn({ onAddTask }) {
         </>
     )
 }
+
 export default CreateTaskBtn;

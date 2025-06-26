@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tsconfig.node.tsbuildinfo",
+    "isolatedModules": true,
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "target": "ESNext",
+    "strict": true,
+    "noEmit": true,
+    "allowJs": true,
+    "types": ["node"]
+  },
+  "include": ["vite.config.ts", "vitest.config.ts"],
+  "exclude": ["node_modules"]
+}

@@ -18,13 +18,13 @@ function App() {
   const [activeId, setActiveId] = useState(null);
 
 
-  function handleDragStart(event) {
+  function handleDragStart(event : any) {
     console.log('event.active.id', event.active.id)
     console.log('event', event)
     setActiveId(event.active.id);
   }
 
-  function handleDragEnd(event) {
+  function handleDragEnd(event : any) {
     setActiveId(null);
     const overOn = event.over;
     const collisionOver = event.collisions[0];

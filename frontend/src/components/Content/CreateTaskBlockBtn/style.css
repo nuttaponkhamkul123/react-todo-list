@@ -2,4 +2,10 @@
     /* padding: 0;
     border: none;
     background: blue; */
+    background:red;
+    padding:1.5rem;
+    font-size:2rem;
+    font-weight: 200;
+    border-radius: 8px;
+    color:white;
 }

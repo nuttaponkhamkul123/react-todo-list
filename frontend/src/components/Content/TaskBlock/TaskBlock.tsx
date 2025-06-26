@@ -13,7 +13,7 @@ import {
 // import styles from './style.module.css';
 
 
-function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
+export function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
     // const [isDragging, setIsDragging] = useState(false);
     const { setNodeRef , isOver } = useDroppable({
         id: blockId,
@@ -68,5 +68,4 @@ function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
         </>
     )
 }
-
-export default TaskBlock
+export default TaskBlock;
