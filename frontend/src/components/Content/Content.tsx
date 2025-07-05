@@ -3,58 +3,72 @@
 import CreateTaskBlockBtn from './CreateTaskBlockBtn/CreateTaskBlockBtn';
 import TaskBlock from './TaskBlock/TaskBlock';
 
-import { useState } from 'react';
+import { forwardRef, useContext, useImperativeHandle, useState } from 'react';
 import styles from './style.module.css';
+import { TaskDataContext } from '@/context/task-data.context';
+import { TaskDataProvider } from '@/provider/task-data.provider';
 
 
-function Content({ activeId }) {
-  // const [mockData, setMockData] = useState([]);
-  const [mockTaskData, setMockTaskData] = useState([]);
+const Content = forwardRef(
+  ({ activeId, dragEndEvent }: { activeId: string, dragEndEvent: boolean }, ref) => {
+    // const [mockData, setMockData] = useState([]);
+    const [mockTaskData, setMockTaskData] = useState([]);
+    const contextData = useContext(TaskDataContext);
 
 
-  const addTaskHandler = (a) => {
+    useImperativeHandle(ref, () => ({
+      dragEnd: (data) => {
+        const { from, to } = data;
+        const [containerID, index] = from.split('_');
+        const fromTaskBlock = contextData.taskBlocks.find(x => x.id === containerID);
 
-    if (!a) return;
-    const matchedIndex = mockTaskData.findIndex(x => x.id === a.id)
-    if (matchedIndex <= -1) return;
-    const newData = {
-      id: mockTaskData[matchedIndex].tasks.length + 1,
-      text: '',
-      // done: false
+        if (!fromTaskBlock) return;
+        console.log('index', index)
+        const toMoveElement = fromTaskBlock.tasks[+index];
+
+        // to.taskData.tasks.push(toMoveElement);
+        // fromTaskBlock.splice(index, 1);
+        console.log('toMoveElement', toMoveElement)
+        contextData.removeTask(containerID, toMoveElement.id);
+
+
+      }
+
+    }))
+
+    const addTaskHandler = (a) => {
+      contextData.addTask(a);
     }
-    mockTaskData[matchedIndex].tasks.push(newData);
-    setMockTaskData([...mockTaskData])
+
+    const addTaskBlockHandler = () => {
+      contextData.addTaskBlock();
+    }
+
+
+    return (
+      <>
+
+
+        <div className={styles['task-blocks']}>
+          {contextData.taskBlocks.map((taskBlockData, blockIndex) => (
+
+            <TaskBlock key={blockIndex} blockId={blockIndex} taskData={taskBlockData} onAddTask={addTaskHandler} activeId={activeId} />
+          )
+          )
+          }
+        </div>
+
+        <div className="">
+          <CreateTaskBlockBtn onAddTaskBlockClick={addTaskBlockHandler} />
+        </div>
+
+
+
+
+
+      </>
+    )
 
   }
-
-  const addTaskBlockHandler = () => {
-    const newData = {
-      id: mockTaskData.length + 1,
-      blockName: 'untitled',
-      tasks: [],
-    }
-    setMockTaskData([...mockTaskData, newData])
-    console.log('mockTaskData ', mockTaskData)
-  }
-
-
-  return (
-    <>
-      <div className={styles['task-blocks']}>
-        {mockTaskData.map((taskBlockData, blockIndex) => (
-
-          <TaskBlock key={blockIndex} blockId={blockIndex} taskData={taskBlockData} onAddTask={addTaskHandler} activeId={activeId} />
-        )
-        )
-        }
-      </div>
-
-      <div className="">
-        <CreateTaskBlockBtn onAddTaskBlockClick={addTaskBlockHandler} />
-      </div>
-
-    </>
-  )
-}
-
+)
 export default Content;

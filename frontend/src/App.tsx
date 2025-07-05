@@ -5,7 +5,9 @@ import './App.css'
 import Header from './components/Header/Header'
 import Content from './components/Content/Content'
 import { DndContext, useSensor, PointerSensor, KeyboardSensor, closestCenter, useSensors, DragOverlay } from '@dnd-kit/core';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { TaskDataContext } from './context/task-data.context';
+import { TaskDataProvider } from './provider/task-data.provider';
 
 
 function App() {
@@ -15,24 +17,34 @@ function App() {
     useSensor(KeyboardSensor)
   );
 
-  const [activeId, setActiveId] = useState(null);
+
+  const [activeId, setActiveId] = useState(-1);
+  const [dragEndEvent, setDragEndEvent] = useState<any>(null);
+  const contentRef = useRef(null);
 
 
-  function handleDragStart(event : any) {
-    console.log('event.active.id', event.active.id)
-    console.log('event', event)
+
+  function handleDragStart(event: any) {
     setActiveId(event.active.id);
   }
 
-  function handleDragEnd(event : any) {
-    setActiveId(null);
+  function handleDragEnd(event: any) {
+    if (!contentRef?.current) return;
+
     const overOn = event.over;
     const collisionOver = event.collisions[0];
+    console.log('event', event)
+    console.log('overOn ', overOn);
+    console.log('collisionOver', collisionOver)
 
-    console.log('overOn ' , overOn);
-    console.log('collisionOver' , collisionOver)
+    const payload = {
+      from: event.active.id,
+      to: overOn.data.current
+    };
+    // const currentItem =
+    (contentRef.current as any).dragEnd(payload);
+    // setActiveId(-1);
   }
-
 
 
   // onDragEnd={handleDragEnd}
@@ -46,13 +58,20 @@ function App() {
           collisionDetection={closestCenter}
           onDragStart={handleDragStart} onDragEnd={handleDragEnd}
         >
-          <Content activeId={activeId} />
+
+          <TaskDataProvider>
+
+            <Content ref={contentRef} activeId={activeId} dragEndEvent={dragEndEvent} />
+
+          </TaskDataProvider>
+
+
 
           <DragOverlay>
             {/* <Task text={taskData.tasks.find(x => taskData.id + '_' + x.id === activeId)?.text || null} id={activeId} /> */}
             {activeId > -1 ?
               // (<Task text={taskData.tasks.find(x => taskData.id + '_' + x.id === activeId)?.text || null} id={activeId} />) : null
-              (<div style="background:red;width:50px;height:50px;">HELLO WORLD</div>) : null
+              null : null
 
             }
 

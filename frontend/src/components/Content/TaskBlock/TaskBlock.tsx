@@ -10,22 +10,60 @@ import {
     useDroppable
 } from '@dnd-kit/core';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { useContext, useEffect } from 'react';
+import { TaskDataContext } from '@/context/task-data.context';
 // import { useState } from 'react';
 // import styles from './style.module.css';
 
 
 export function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
+
+    const contextData = useContext(TaskDataContext);
     // const [isDragging, setIsDragging] = useState(false);
-    const { setNodeRef , isOver } = useDroppable({
+    const { setNodeRef, isOver } = useDroppable({
         id: blockId,
+        data: {
+            taskData
+        }
     });
     const onBlockNameChanges = () => {
         console.log('ON INPUT CHANGES')
     }
 
     const addTask = () => {
-        onAddTask(taskData);
+        console.log('blockId', blockId)
+        // onAddTask(taskData);
+        console.log('TASK DATA', taskData);
+        contextData.addTask(taskData)
     }
+
+
+    const onTaskTextChanges = (a) => {
+        const { text, index } = a; // e.g., index is "blockId_taskId"
+        console.log('index', index)
+        const [taskID, taskIdIndex] = index.split('_');
+        // Use the functional form of setState to get the most recent state
+        contextData.setTaskBlocks(currentTaskBlocks => {
+            // 1. Create a new top-level array
+            return currentTaskBlocks.map((block) => {
+                if (block.id !== taskData.id) {
+                    return block;
+                }
+
+                return {
+                    ...block,
+                    tasks: block.tasks.map((task, idx) => {
+                        if (idx !== +taskIdIndex) {
+                            return task;
+                        }
+                        // 4. It's the right task, so create a new task object with the updated text
+                        return { ...task, text: text };
+                    })
+                };
+            });
+        });
+        console.log('contextData', contextData.taskBlocks)
+    };
 
     return (
         <>
@@ -38,12 +76,13 @@ export function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
                 </CardHeader>
                 <div className="tasks" ref={setNodeRef} >
                     {/* sensors={sensors} */}
-                    {taskData.tasks.map((data, index) =>
+                    {contextData.taskBlocks[blockId].tasks.map((data, index) =>
                     (
                         <div>
-                            <div key={taskData.id + '_' + index}>
+                            android {data.text}
+                            <div key={data.id + '_' + index + '_' + data.text}>
                                 {/* {activeId === taskData.id + '_' + index ? null : <Task text={taskData.text} id={taskData.id + '_' + index} />} */}
-                                <Task text={taskData.text} id={taskData.id + '_' + index} />
+                                <Task text={data.text} id={data.id + '_' + index} onTaskTextChanges={onTaskTextChanges} />
                                 {/* <Task text={taskData.text} id={index} /> */}
                             </div>
                         </div>
@@ -67,7 +106,7 @@ export function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
 
 
             </Card>
-            
+
         </>
     )
 }
