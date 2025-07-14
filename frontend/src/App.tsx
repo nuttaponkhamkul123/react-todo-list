@@ -35,9 +35,7 @@ function App() {
     const taskBlockOverOn = overOn.data.current.taskBlockData;
     if (taskBlockOverOn.id === currentDraggableTask.parentId) return;
     const collisionOver = event.collisions[0];
-    // console.log('event', event)
-    // console.log('overOn ', overOn);
-    // console.log('collisionOver', collisionOver)
+
 
     const payload = {
       // this is task id not container
@@ -71,11 +69,8 @@ function App() {
 
 
           <DragOverlay>
-            {/* <Task text={taskData.tasks.find(x => taskData.id + '_' + x.id === activeId)?.text || null} id={activeId} /> */}
             {activeId > -1 ?
-              // (<Task text={taskData.tasks.find(x => taskData.id + '_' + x.id === activeId)?.text || null} id={activeId} />) : null
               null : null
-
             }
 
 
