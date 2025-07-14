@@ -26,15 +26,9 @@ export function TaskBlock({ taskBlockData, onAddTask, blockId, activeId }) {
             taskBlockData
         }
     });
-    const onBlockNameChanges = () => {
-        console.log('ON INPUT CHANGES')
-    }
-
     const addTask = () => {
         contextData.addTask(taskBlockData)
     }
-
-
     const onTaskTextChanges = (a) => {
         const { text, index: id } = a;
         const taskBlockIdx = taskBlockData.tasks.findIndex(x => x.id === id)
@@ -58,12 +52,25 @@ export function TaskBlock({ taskBlockData, onAddTask, blockId, activeId }) {
             });
         });
     };
+    const onTaskBlockTextChanges = (e) => {
+        contextData.setTaskBlocks(currentTaskBlocks => {
+            return currentTaskBlocks.map((block) => {
+                if (block.id !== taskBlockData.id) {
+                    return block;
+                }
+                return {
+                    ...block,
+                    blockName: e.target.value
 
+                };
+            });
+        });
+    }
     return (
         <>
             <Card className={`task-block ${isOver ? 'over' : ''}`}>
                 <CardHeader className="title" >
-                    <CardTitle >{taskBlockData.blockName}</CardTitle>
+                    <CardTitle className="card-title"><input className="card-title-input" onChange={onTaskBlockTextChanges} value={taskBlockData.blockName} /></CardTitle>
                     <CreateTaskBtn onAddTask={addTask} />
 
                 </CardHeader>
