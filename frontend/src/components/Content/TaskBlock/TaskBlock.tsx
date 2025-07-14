@@ -16,14 +16,14 @@ import { TaskDataContext } from '@/context/task-data.context';
 // import styles from './style.module.css';
 
 
-export function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
+export function TaskBlock({ taskBlockData, onAddTask, blockId, activeId }) {
 
     const contextData = useContext(TaskDataContext);
     // const [isDragging, setIsDragging] = useState(false);
     const { setNodeRef, isOver } = useDroppable({
         id: blockId,
         data: {
-            taskData
+            taskBlockData
         }
     });
     const onBlockNameChanges = () => {
@@ -31,46 +31,39 @@ export function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
     }
 
     const addTask = () => {
-        console.log('blockId', blockId)
-        // onAddTask(taskData);
-        console.log('TASK DATA', taskData);
-        contextData.addTask(taskData)
+        contextData.addTask(taskBlockData)
     }
 
 
     const onTaskTextChanges = (a) => {
-        const { text, index } = a; // e.g., index is "blockId_taskId"
-        console.log('index', index)
-        const [taskID, taskIdIndex] = index.split('_');
-        // Use the functional form of setState to get the most recent state
+        const { text, index: id } = a;
+        const taskBlockIdx = taskBlockData.tasks.findIndex(x => x.id === id)
+        if (taskBlockIdx <= -1) return;
         contextData.setTaskBlocks(currentTaskBlocks => {
-            // 1. Create a new top-level array
             return currentTaskBlocks.map((block) => {
-                if (block.id !== taskData.id) {
+                if (block.id !== taskBlockData.id) {
                     return block;
                 }
-
+                console.log('GO HERE')
                 return {
                     ...block,
                     tasks: block.tasks.map((task, idx) => {
-                        if (idx !== +taskIdIndex) {
+                        if (idx !== +taskBlockIdx) {
                             return task;
                         }
-                        // 4. It's the right task, so create a new task object with the updated text
-                        return { ...task, text: text };
+                        const res = { ...task, text: text };
+                        return res;
                     })
                 };
             });
         });
-        console.log('contextData', contextData.taskBlocks)
     };
 
     return (
         <>
             <Card className={`task-block ${isOver ? 'over' : ''}`}>
                 <CardHeader className="title" >
-
-                    <CardTitle contentEditable="true" onInput={onBlockNameChanges}>{taskData.blockName}</CardTitle>
+                    <CardTitle >{taskBlockData.blockName}</CardTitle>
                     <CreateTaskBtn onAddTask={addTask} />
 
                 </CardHeader>
@@ -79,34 +72,14 @@ export function TaskBlock({ taskData, onAddTask, blockId, activeId }) {
                     {contextData.taskBlocks[blockId].tasks.map((data, index) =>
                     (
                         <div>
-                            android {data.text}
-                            <div key={data.id + '_' + index + '_' + data.text}>
-                                {/* {activeId === taskData.id + '_' + index ? null : <Task text={taskData.text} id={taskData.id + '_' + index} />} */}
-                                <Task text={data.text} id={data.id + '_' + index} onTaskTextChanges={onTaskTextChanges} />
-                                {/* <Task text={taskData.text} id={index} /> */}
+                            <div key={data.id}>
+                                <Task data={data} text={data.text} id={data.id} parentId={data.parentId} onTaskTextChanges={onTaskTextChanges} />
                             </div>
                         </div>
                     )
-
-
                     )}
-                    {/* <DragOverlay>
-                                {activeId > -1 ?
-                                    (<Task text={taskData.tasks.find(x => taskData.id + '_' + x.id === activeId)?.text || null} id={activeId} />) : null
-                                }
-
-
-                            </DragOverlay> */}
-
-
-
-
-
                 </div>
-
-
             </Card>
-
         </>
     )
 }

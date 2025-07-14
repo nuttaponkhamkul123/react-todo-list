@@ -18,18 +18,20 @@ const Content = forwardRef(
 
     useImperativeHandle(ref, () => ({
       dragEnd: (data) => {
-        const { from, to } = data;
-        const [containerID, index] = from.split('_');
-        const fromTaskBlock = contextData.taskBlocks.find(x => x.id === containerID);
-
+        const { taskData, to } = data;
+        // const [containerID, index] = from.split('_');
+        const fromTaskBlock = contextData.taskBlocks.find(x => x.id === taskData.parentId);
         if (!fromTaskBlock) return;
-        console.log('index', index)
-        const toMoveElement = fromTaskBlock.tasks[+index];
+        const t = JSON.parse(JSON.stringify(taskData))
+        contextData.removeTask(taskData);
+        t.parentId = to.taskBlockData.id
+        to.taskBlockData.tasks.push(t);
 
-        // to.taskData.tasks.push(toMoveElement);
-        // fromTaskBlock.splice(index, 1);
-        console.log('toMoveElement', toMoveElement)
-        contextData.removeTask(containerID, toMoveElement.id);
+
+
+        // // fromTaskBlock.splice(index, 1);
+        // console.log('toMoveElement', toMoveElement)
+
 
 
       }
@@ -52,7 +54,7 @@ const Content = forwardRef(
         <div className={styles['task-blocks']}>
           {contextData.taskBlocks.map((taskBlockData, blockIndex) => (
 
-            <TaskBlock key={blockIndex} blockId={blockIndex} taskData={taskBlockData} onAddTask={addTaskHandler} activeId={activeId} />
+            <TaskBlock key={blockIndex} blockId={blockIndex} taskBlockData={taskBlockData} onAddTask={addTaskHandler} activeId={activeId} />
           )
           )
           }

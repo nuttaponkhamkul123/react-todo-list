@@ -30,15 +30,18 @@ function App() {
 
   function handleDragEnd(event: any) {
     if (!contentRef?.current) return;
-
+    const currentDraggableTask = event.active.data.current;
     const overOn = event.over;
+    const taskBlockOverOn = overOn.data.current.taskBlockData;
+    if (taskBlockOverOn.id === currentDraggableTask.parentId) return;
     const collisionOver = event.collisions[0];
-    console.log('event', event)
-    console.log('overOn ', overOn);
-    console.log('collisionOver', collisionOver)
+    // console.log('event', event)
+    // console.log('overOn ', overOn);
+    // console.log('collisionOver', collisionOver)
 
     const payload = {
-      from: event.active.id,
+      // this is task id not container
+      taskData: currentDraggableTask,
       to: overOn.data.current
     };
     // const currentItem =

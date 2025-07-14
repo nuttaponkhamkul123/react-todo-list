@@ -14,6 +14,7 @@ export const TaskDataProvider = ({ children }) => {
         if (matchedIndex < -1) return;
         const newData = {
             id: uuidv4(),
+            parentId: targetTaskBlock.id,
             text: '',
         }
         taskBlocks[matchedIndex].tasks.push(newData);
@@ -21,29 +22,22 @@ export const TaskDataProvider = ({ children }) => {
         setTaskBlocks([...taskBlocks])
 
     }
-    const removeTask = (blockId, taskID) => {
-        console.log('blockId', blockId)
-        console.log('taskID', taskID)
+    const removeTask = (taskData) => {
         setTaskBlocks((currentTaskBlocks) => {
             return currentTaskBlocks.map((block) => {
-                if (block.id !== blockId) {
+                if (block.id !== taskData.parentId) {
                     return block;
                 }
+                const updatedTasks = block.tasks.filter((task) => task.id !== taskData.id);
                 const res = {
                     ...block,
-                    tasks: block.tasks.map((task, idx) => {
-                        if (task.id !== taskID) {
-                            return task;
-                        }
-                        console.log('MATCHED ', task)
-                        return null;
-                    }).filter(Boolean)
-                }
-                console.log('RES ', res)
+                    tasks: updatedTasks,
+                };
                 return res;
             });
-        })
-    }
+        });
+
+    };
     const addTaskBlock = () => {
         const newData = {
             id: uuidv4(),
