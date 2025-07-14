@@ -49,6 +49,9 @@
             width: var(--btn-dimension);
             height: var(--btn-dimension);
             display: block;
+            align-items: center;
+            display: flex;
+            justify-content: center;
 
             &.done-task {
                 background: blue;

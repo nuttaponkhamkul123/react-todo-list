@@ -1,3 +1,16 @@
+.card-title {
+    width: stretch;
+
+    .card-title-input {
+        width: stretch;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+}
+
 .task-block {
     width: 200px;
     /* border: 1px solid grey;
@@ -13,10 +26,12 @@
     overflow-y: overlay;
     position: relative;
     transition: background-color 100ms linear;
+
     &.over {
-        background-color:grey;
+        background-color: grey;
+
         >.title {
-            color:white;
+            color: white;
         }
     }
 
@@ -32,7 +47,7 @@
         display: flex;
         justify-content: space-between;
         text-overflow: ellipsis;
-        
+
     }
 
     >.tasks {
