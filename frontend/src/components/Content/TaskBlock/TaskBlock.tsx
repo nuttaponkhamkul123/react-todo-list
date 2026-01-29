@@ -1,7 +1,7 @@
 // import './style.css'
 import Task from './components/Task/Task';
 
-import { Palette, GripVertical } from 'lucide-react';
+import { Palette, GripVertical, Trash2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import {
@@ -103,7 +103,8 @@ export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, bloc
 
     const blockStyle = {
         transform: CSS.Translate.toString(transform),
-        transition,
+        transition: isDraggingBlock ? 'none' : 'transform 150ms ease',
+        willChange: 'transform',
         borderLeft: blockColor ? `4px solid ${blockColor}` : undefined,
         backgroundColor: blockColor ? `${blockColor}12` : undefined,
     };
@@ -112,16 +113,16 @@ export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, bloc
         <div
             ref={setSortableNodeRef}
             className={`
-                task-block flex flex-col h-full bg-background/40 backdrop-blur-md border border-white/10 rounded-3xl min-w-[320px] max-w-[320px] transition-all duration-300 shadow-2xl shadow-black/5
+                task-block flex flex-col h-full bg-background/40 backdrop-blur-md border border-white/10 rounded-3xl min-w-[320px] max-w-[320px] shadow-2xl shadow-black/5
                 ${isOver ? 'bg-background/60 ring-2 ring-primary/20' : ''}
-                ${isDraggingBlock ? 'opacity-50 z-50' : ''}
+                ${isDraggingBlock ? 'z-50 ring-2 ring-primary/40' : ''}
             `}
             style={blockStyle}
         >
             <div className="pt-5 px-4 mb-4 flex items-center justify-between gap-1 group">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                     <div
-                        className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 cursor-grab active:cursor-grabbing transition-colors shrink-0"
+                        className="p-1 rounded-md text-foreground/60 hover:text-primary hover:bg-primary/10 cursor-grab active:cursor-grabbing transition-colors shrink-0"
                         style={{ color: blockColor || undefined }}
                         {...attributes}
                         {...listeners}
@@ -138,11 +139,11 @@ export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, bloc
                     />
                 </div>
 
-                <div className="shrink-0">
+                <div className="flex items-center gap-0.5 shrink-0">
                     <Popover>
                         <PopoverTrigger asChild>
                             <button
-                                className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                className="p-1.5 rounded-lg hover:bg-primary/10 text-foreground/60 hover:text-primary transition-colors"
                                 style={{ color: blockColor || undefined }}
                             >
                                 <Palette size={18} />
@@ -161,6 +162,13 @@ export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, bloc
                             </div>
                         </PopoverContent>
                     </Popover>
+
+                    <button
+                        onClick={() => contextData.removeBlock(taskBlockData.id)}
+                        className="p-1.5 rounded-lg hover:bg-red-500/10 text-red-500/70 hover:text-red-500 transition-colors"
+                    >
+                        <Trash2 size={18} />
+                    </button>
                 </div>
             </div>
 

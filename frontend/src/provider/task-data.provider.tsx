@@ -9,7 +9,7 @@ export const TaskDataProvider = ({ children }: { children: React.ReactNode }) =>
 
 
 
-    const addTask = (targetTaskBlock) => {
+    const addTask = (targetTaskBlock: any) => {
         if (!targetTaskBlock) return;
         setTaskBlocks(prevBlocks => {
             const index = prevBlocks.findIndex(x => x.id === targetTaskBlock.id);
@@ -30,13 +30,13 @@ export const TaskDataProvider = ({ children }: { children: React.ReactNode }) =>
             return newBlocks;
         });
     }
-    const removeTask = (taskData) => {
+    const removeTask = (taskData: any) => {
         setTaskBlocks((currentTaskBlocks) => {
             return currentTaskBlocks.map((block) => {
                 if (block.id !== taskData.parentId) {
                     return block;
                 }
-                const updatedTasks = block.tasks.filter((task) => task.id !== taskData.id);
+                const updatedTasks = block.tasks.filter((task: any) => task.id !== taskData.id);
                 const res = {
                     ...block,
                     tasks: updatedTasks,
@@ -56,7 +56,7 @@ export const TaskDataProvider = ({ children }: { children: React.ReactNode }) =>
         console.log('taskBlocks ', taskBlocks)
     }
 
-    const moveTask = (activeId, activeBlockId, activeIndex, overBlockId, overIndex) => {
+    const moveTask = (activeId: any, activeBlockId: any, activeIndex: any, overBlockId: any, overIndex: any) => {
         setTaskBlocks((prev) => {
             const newBlocks = [...prev];
             const activeBlockIdx = newBlocks.findIndex(b => b.id === activeBlockId);
@@ -90,10 +90,10 @@ export const TaskDataProvider = ({ children }: { children: React.ReactNode }) =>
         });
     }
 
-    const updateTaskColor = (taskId, color) => {
+    const updateTaskColor = (taskId: any, color: any) => {
         setTaskBlocks((prev) => {
             return prev.map(block => {
-                const taskIndex = block.tasks.findIndex(t => t.id === taskId);
+                const taskIndex = block.tasks.findIndex((t: any) => t.id === taskId);
                 if (taskIndex === -1) return block;
 
                 const newBlock = { ...block };
@@ -125,6 +125,10 @@ export const TaskDataProvider = ({ children }: { children: React.ReactNode }) =>
         });
     };
 
+    const removeBlock = (blockId: string) => {
+        setTaskBlocks((prev) => prev.filter((block) => block.id !== blockId));
+    };
+
     const data: any = {
         taskBlocks,
         addTaskBlock,
@@ -134,7 +138,8 @@ export const TaskDataProvider = ({ children }: { children: React.ReactNode }) =>
         moveTask,
         updateTaskColor,
         updateBlockColor,
-        moveBlock
+        moveBlock,
+        removeBlock
     }
 
     return (
