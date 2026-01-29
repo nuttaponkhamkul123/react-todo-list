@@ -10,42 +10,43 @@ import { TaskDataContext } from './context/task-data.context';
 import { TaskDataProvider } from './provider/task-data.provider';
 
 
+import { useContext } from 'react';
+import { TaskCard } from './components/Content/TaskBlock/components/Task/Task';
+
 function App() {
-  // const [count, setCount] = useState(0)
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor)
   );
 
-
   const [activeId, setActiveId] = useState(-1);
   const [dragEndEvent, setDragEndEvent] = useState<any>(null);
   const contentRef = useRef(null);
-
+  const contextData = useContext(TaskDataContext);
 
 
   function handleDragStart(event: any) {
     setActiveId(event.active.id);
   }
 
+  function handleDragOver(event: any) {
+    if (!contentRef?.current) return;
+    const { active, over } = event;
+    (contentRef.current as any).dragOver({ active, over });
+
+  }
+
   function handleDragEnd(event: any) {
     if (!contentRef?.current) return;
-    const currentDraggableTask = event.active.data.current;
-    const overOn = event.over;
-    const taskBlockOverOn = overOn.data.current.taskBlockData;
-    if (taskBlockOverOn.id === currentDraggableTask.parentId) return;
-    const collisionOver = event.collisions[0];
+    const { active, over } = event;
 
-
-    const payload = {
-      // this is task id not container
-      taskData: currentDraggableTask,
-      to: overOn.data.current
-    };
-    // const currentItem =
-    (contentRef.current as any).dragEnd(payload);
-    // setActiveId(-1);
+    (contentRef.current as any).dragEnd({ active, over });
+    setActiveId(-1);
   }
+
+  const activeTask = activeId ? contextData.taskBlocks
+    .flatMap(block => block.tasks)
+    .find(task => task.id === activeId) : null;
 
 
   // onDragEnd={handleDragEnd}
@@ -57,23 +58,24 @@ function App() {
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
-          onDragStart={handleDragStart} onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
         >
 
-          <TaskDataProvider>
-
-            <Content ref={contentRef} activeId={activeId} dragEndEvent={dragEndEvent} />
-
-          </TaskDataProvider>
-
-
+          <Content ref={contentRef} activeId={activeId} dragEndEvent={dragEndEvent} />
 
           <DragOverlay>
-            {activeId > -1 ?
-              null : null
-            }
-
-
+            {activeTask ? (
+              <TaskCard
+                text={activeTask.text}
+                id={activeTask.id}
+                onRemoveTask={() => { }}
+                onTaskTextChanges={() => { }}
+                isDragging={true}
+                className="opacity-80 rotate-2 scale-105 shadow-xl cursor-grabbing bg-background/90 backdrop-blur-sm border-primary/50"
+              />
+            ) : null}
           </DragOverlay>
         </DndContext>
 

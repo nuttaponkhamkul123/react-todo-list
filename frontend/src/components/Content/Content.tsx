@@ -16,15 +16,59 @@ const Content = forwardRef(
 
 
     useImperativeHandle(ref, () => ({
-      dragEnd: (data) => {
-        const { taskData, to } = data;
-        const fromTaskBlock = contextData.taskBlocks.find(x => x.id === taskData.parentId);
-        if (!fromTaskBlock) return;
-        const t = JSON.parse(JSON.stringify(taskData))
-        contextData.removeTask(taskData);
-        t.parentId = to.taskBlockData.id
-        to.taskBlockData.tasks.push(t);
+      dragOver: (data) => {
+        const { active, over } = data;
+        if (!over) return;
 
+        const activeId = active.id;
+        const overId = over.id;
+
+        // Find the containers
+        const activeContainer = contextData.taskBlocks.find(block => block.tasks.some(task => task.id === activeId))?.id;
+        const overContainer = contextData.taskBlocks.find(block => block.id === overId)?.id ||
+          contextData.taskBlocks.find(block => block.tasks.some(task => task.id === overId))?.id;
+
+        if (!activeContainer || !overContainer || activeContainer === overContainer) {
+          return;
+        }
+
+        // Determine new index
+        const activeTaskBlock = contextData.taskBlocks.find(b => b.id === activeContainer);
+        const overTaskBlock = contextData.taskBlocks.find(b => b.id === overContainer);
+
+        const activeIndex = activeTaskBlock.tasks.findIndex(t => t.id === activeId);
+        const overIndex = overTaskBlock.tasks.findIndex(t => t.id === overId);
+
+        let newIndex;
+        if (overId === overContainer) {
+          // We are over the container itself, so we place it at the end
+          newIndex = overTaskBlock.tasks.length + 1;
+        } else {
+          const isBelowOverItem = over &&
+            active.rect.current.translated &&
+            active.rect.current.translated.top > over.rect.top + over.rect.height;
+
+          const modifier = isBelowOverItem ? 1 : 0;
+          newIndex = overIndex >= 0 ? overIndex + modifier : overTaskBlock.tasks.length + 1;
+        }
+
+        contextData.moveTask(activeId, activeContainer, activeIndex, overContainer, newIndex);
+      },
+      dragEnd: (data) => {
+        const { active, over } = data;
+        if (!over) return;
+        const activeContainer = contextData.taskBlocks.find(block => block.tasks.some(task => task.id === active.id))?.id;
+        const overContainer = contextData.taskBlocks.find(block => block.id === over.id)?.id ||
+          contextData.taskBlocks.find(block => block.tasks.some(task => task.id === over.id))?.id;
+
+        if (activeContainer && overContainer && activeContainer === overContainer) {
+          const activeIndex = contextData.taskBlocks.find(b => b.id === activeContainer).tasks.findIndex(t => t.id === active.id);
+          const overIndex = contextData.taskBlocks.find(b => b.id === overContainer).tasks.findIndex(t => t.id === over.id);
+
+          if (activeIndex !== overIndex) {
+            contextData.moveTask(active.id, activeContainer, activeIndex, overContainer, overIndex);
+          }
+        }
       }
 
     }))

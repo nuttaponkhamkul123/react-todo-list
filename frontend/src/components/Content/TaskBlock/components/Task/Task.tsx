@@ -1,57 +1,103 @@
-
-// import styles from './style.module.css';
+// import { useDraggable } from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import { useState } from 'react';
-import './style.css';
-import { useDraggable } from '@dnd-kit/core';
 
 
-
-function Task(props) {
+export function TaskCard({ text, id, onRemoveTask, onTaskTextChanges, style, className, listeners, attributes, setNodeRef, isDragging }) {
   const [isCardFocusing, setIsCardFocusing] = useState(false);
-  // const 
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: props.id,
-    enabled: !isCardFocusing,
-    data: props.data
 
-  });
-  const style = {
-    position: isDragging ? 'fixed' : "static",
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    zIndex: isDragging ? 999 : 1,
-    width: isDragging ? '200px' : 'unset',
-    cursor: 'grab',
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const onTaskTextChanges = (event) => {
-    const text = event.target.value;
-    props.onTaskTextChanges({ text, index: props.id });
-  }
   const onTaskFocus = () => {
     setIsCardFocusing(true);
-
-
   }
   const onTaskBlur = () => {
     setIsCardFocusing(false);
-
   }
+  // eslint-disable-next-line no-unused-vars
+  const handleTextChange = (event) => {
+    const text = event.target.value;
+    onTaskTextChanges({ text, index: id });
+  }
+
   return (
-    <>
-      <div ref={setNodeRef} style={style} className={`task-card ${isDragging ? 'dragging' : ''}`}>
-        <span   {...listeners} {...attributes}>
-          <svg fill="#000000" width="20" height="20" viewBox="0 0 36 36" version="1.1" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <title>drag-handle-line</title>
-            <circle cx="15" cy="12" r="1.5" className="clr-i-outline clr-i-outline-path-1"></circle><circle cx="15" cy="24" r="1.5" class="clr-i-outline clr-i-outline-path-2"></circle><circle cx="21" cy="12" r="1.5" class="clr-i-outline clr-i-outline-path-3"></circle><circle cx="21" cy="24" r="1.5" class="clr-i-outline clr-i-outline-path-4"></circle><circle cx="21" cy="18" r="1.5" class="clr-i-outline clr-i-outline-path-5"></circle><circle cx="15" cy="18" r="1.5" class="clr-i-outline clr-i-outline-path-6"></circle>
-            <rect x="0" y="0" width="36" height="36" fill-opacity="0" />
-          </svg></span>
-        <input onInput={onTaskTextChanges} onFocus={onTaskFocus} onBlur={onTaskBlur} value={props.text} className="task-input" />
-        <span className="task-operators">
-          <span className="task-operator remove-task">-</span>
-        </span>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`
+                group relative flex items-center gap-2 p-3 rounded-xl border border-border/40 bg-card shadow-sm hover:shadow-md transition-all duration-200
+                ${isDragging ? 'dragging ring-2 ring-primary/20 rotate-2' : 'hover:border-primary/20'}
+                ${className || ''}
+            `}
+    >
+      <div {...listeners} {...attributes} className="cursor-grab touch-none text-muted-foreground/40 group-hover:text-muted-foreground transition-colors p-1 -ml-1 hover:bg-muted/50 rounded-md">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fillRule="evenodd" clipRule="evenodd" d="M5 3.5C5 3.22386 4.77614 3 4.5 3C4.22386 3 4 3.22386 4 3.5V12.5C4 12.7761 4.22386 13 4.5 13C4.77614 13 5 12.7761 5 12.5V3.5ZM8.5 3C8.77614 3 9 3.22386 9 3.5V12.5C9 12.7761 8.77614 13 8.5 13C8.22386 13 8 12.7761 8 12.5V3.5C8 3.22386 8.22386 3 8.5 3ZM12.5 3C12.7761 3 13 3.22386 13 3.5V12.5C13 12.7761 12.7761 13 12.5 13C12.22386 13 12 12.7761 12 12.5V3.5C12 3.22386 12.22386 3 12.5 3Z" fill="currentColor" opacity="0.5" />
+        </svg>
       </div>
-    </>
+
+      <input
+        onInput={handleTextChange}
+        onFocus={onTaskFocus}
+        onBlur={onTaskBlur}
+        value={text}
+        className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-foreground placeholder:text-muted-foreground/50 truncate min-w-0"
+        placeholder="Type a task..."
+      />
+
+      <div className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors"
+          onClick={onRemoveTask}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+
+function Task(props) {
+  // const [isCardFocusing, setIsCardFocusing] = useState(false);
+  // const 
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging // optional, useful for styling
+  } = useSortable({
+    id: props.id,
+    disabled: false, // Moved disabled logic to input focus in TaskCard via listeners containment or similar if needed, but for now Sortable handles drag handle.
+    // Actually, useSortable disabled prop disables the whole item. 
+    // We want to disable dragging when input is focused. 
+    // But we are using a drag handle. So simpler:
+    data: props.data
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 999 : 1,
+    opacity: isDragging ? 0.3 : 1, // Visual feedback for dragging
+    // width: isDragging ? '200px' : 'unset', // Moving this to CSS or keeping consistent
+    cursor: 'grab',
+  };
+
+  return (
+    <TaskCard
+      {...props}
+      style={style}
+      listeners={listeners}
+      attributes={attributes}
+      setNodeRef={setNodeRef}
+      isDragging={isDragging}
+    />
   )
 }
 export default Task;
