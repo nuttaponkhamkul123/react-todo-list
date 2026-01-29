@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { TaskDataContext } from '../context/task-data.context'
 import { v4 as uuidv4 } from 'uuid';
+import { arrayMove } from "@dnd-kit/sortable";
 
 
 export const TaskDataProvider = ({ children }: { children: React.ReactNode }) => {
@@ -115,6 +116,15 @@ export const TaskDataProvider = ({ children }: { children: React.ReactNode }) =>
         });
     }
 
+    const moveBlock = (activeId: string, overId: string) => {
+        setTaskBlocks((prev) => {
+            const oldIndex = prev.findIndex((block) => block.id === activeId);
+            const newIndex = prev.findIndex((block) => block.id === overId);
+
+            return arrayMove(prev, oldIndex, newIndex);
+        });
+    };
+
     const data: any = {
         taskBlocks,
         addTaskBlock,
@@ -123,7 +133,8 @@ export const TaskDataProvider = ({ children }: { children: React.ReactNode }) =>
         setTaskBlocks,
         moveTask,
         updateTaskColor,
-        updateBlockColor
+        updateBlockColor,
+        moveBlock
     }
 
     return (

@@ -1,13 +1,14 @@
 // import './style.css'
 import Task from './components/Task/Task';
 
-import { Palette } from 'lucide-react';
+import { Palette, GripVertical } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import {
     useDroppable
 } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useMemo } from 'react';
 import { useTaskData } from '@/context/task-data.context';
 
@@ -24,13 +25,35 @@ const PRESET_COLORS = [
     '#ec4899', // Pink 500
 ];
 
-export function TaskBlock({ taskBlockData, blockId }) {
+export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, blockId: number }) {
 
     const contextData = useTaskData();
-    // const [isDragging, setIsDragging] = useState(false);
-    const { setNodeRef, isOver } = useDroppable({
+
+    // For sorting the block horizontally
+    const {
+        attributes,
+        listeners,
+        setNodeRef: setSortableNodeRef,
+        transform,
+        transition,
+        isDragging: isDraggingBlock,
+    } = useSortable({
         id: taskBlockData.id,
+        data: {
+            type: 'Block',
+            taskBlockData,
+        },
     });
+
+    // For dropping tasks into this block
+    const { setNodeRef: setDroppableNodeRef, isOver } = useDroppable({
+        id: taskBlockData.id,
+        data: {
+            type: 'Block',
+            taskBlockData,
+        },
+    });
+
     const addTask = () => {
         contextData.addTask(taskBlockData)
     }
@@ -39,15 +62,15 @@ export function TaskBlock({ taskBlockData, blockId }) {
         return contextData.taskBlocks[blockId]?.tasks || [];
     }, [contextData.taskBlocks, blockId]);
 
-    const onTaskTextChanges = (taskId, text) => {
-        contextData.setTaskBlocks(currentTaskBlocks => {
+    const onTaskTextChanges = (taskId: string, text: string) => {
+        contextData.setTaskBlocks((currentTaskBlocks: any[]) => {
             return currentTaskBlocks.map((block) => {
                 if (block.id !== taskBlockData.id) {
                     return block;
                 }
                 return {
                     ...block,
-                    tasks: block.tasks.map((task) => {
+                    tasks: block.tasks.map((task: any) => {
                         if (task.id !== taskId) {
                             return task;
                         }
@@ -58,8 +81,9 @@ export function TaskBlock({ taskBlockData, blockId }) {
             });
         });
     };
-    const onTaskBlockTextChanges = (e) => {
-        contextData.setTaskBlocks(currentTaskBlocks => {
+
+    const onTaskBlockTextChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
+        contextData.setTaskBlocks((currentTaskBlocks: any[]) => {
             return currentTaskBlocks.map((block) => {
                 if (block.id !== taskBlockData.id) {
                     return block;
@@ -74,56 +98,72 @@ export function TaskBlock({ taskBlockData, blockId }) {
     }
 
     const blockStyle = {
+        transform: CSS.Translate.toString(transform),
+        transition,
         borderLeft: taskBlockData.color && taskBlockData.color !== '#ffffff' ? `4px solid ${taskBlockData.color}` : undefined,
         backgroundColor: taskBlockData.color && taskBlockData.color !== '#ffffff' ? `${taskBlockData.color}10` : undefined,
     };
 
     return (
         <div
+            ref={setSortableNodeRef}
             className={`
                 task-block flex flex-col h-full bg-background/40 backdrop-blur-md border border-white/10 rounded-3xl min-w-[320px] max-w-[320px] transition-all duration-300 shadow-2xl shadow-black/5
                 ${isOver ? 'bg-background/60 ring-2 ring-primary/20' : ''}
+                ${isDraggingBlock ? 'opacity-50 z-50' : ''}
             `}
             style={blockStyle}
         >
-            <div className="pt-5 px-4 mb-4 flex items-center justify-between gap-2 group">
-                <input
-                    className="font-bold text-lg bg-transparent outline-none text-foreground w-full placeholder:text-muted-foreground/50 truncate"
-                    onChange={onTaskBlockTextChanges}
-                    value={taskBlockData.blockName}
-                    placeholder="List Title"
-                />
+            <div className="pt-5 px-4 mb-4 flex items-center justify-between gap-1 group">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div
+                        className="p-1 rounded-md text-muted-foreground/60 hover:text-primary hover:bg-primary/10 cursor-grab active:cursor-grabbing transition-colors shrink-0"
+                        {...attributes}
+                        {...listeners}
+                    >
+                        <GripVertical size={20} />
+                    </div>
 
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <button className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground/40 hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
-                            <Palette size={18} />
-                        </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-48 p-3" align="end">
-                        <div className="grid grid-cols-3 gap-2">
-                            {PRESET_COLORS.map((c) => (
-                                <div
-                                    key={c}
-                                    className="h-8 w-8 rounded-lg cursor-pointer border-2 border-border shadow-md hover:scale-110 hover:border-primary/50 transition-all"
-                                    style={{ backgroundColor: c }}
-                                    onClick={() => contextData.updateBlockColor(taskBlockData.id, c)}
-                                />
-                            ))}
-                        </div>
-                    </PopoverContent>
-                </Popover>
+                    <input
+                        className="font-bold text-lg bg-transparent outline-none text-foreground w-full placeholder:text-muted-foreground/50 truncate cursor-text"
+                        onChange={onTaskBlockTextChanges}
+                        value={taskBlockData.blockName}
+                        placeholder="List Title"
+                    />
+                </div>
+
+                <div className="shrink-0">
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <button className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground/40 hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                <Palette size={18} />
+                            </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-48 p-3" align="end">
+                            <div className="grid grid-cols-3 gap-2">
+                                {PRESET_COLORS.map((c) => (
+                                    <div
+                                        key={c}
+                                        className="h-8 w-8 rounded-lg cursor-pointer border-2 border-border shadow-md hover:scale-110 hover:border-primary/50 transition-all"
+                                        style={{ backgroundColor: c }}
+                                        onClick={() => contextData.updateBlockColor(taskBlockData.id, c)}
+                                    />
+                                ))}
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+                </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-2 min-h-0 relative" ref={setNodeRef}>
+            <div className="flex-1 overflow-y-auto px-2 min-h-0 relative" ref={setDroppableNodeRef}>
                 {sortedTasks?.length ? (
                     <div className="flex flex-col gap-2 min-h-[50px] pb-4">
                         <SortableContext
                             id={taskBlockData.id}
-                            items={contextData.taskBlocks[blockId]?.tasks.map(t => t.id) || []}
+                            items={sortedTasks.map((t: any) => t.id)}
                             strategy={verticalListSortingStrategy}
                         >
-                            {contextData.taskBlocks[blockId]?.tasks.map((task) => (
+                            {sortedTasks.map((task: any) => (
                                 <Task
                                     key={task.id}
                                     id={task.id}
@@ -131,7 +171,7 @@ export function TaskBlock({ taskBlockData, blockId }) {
                                     color={task.color}
                                     data={task}
                                     onRemoveTask={() => contextData.removeTask(task)}
-                                    onUpdateTaskColor={(color) => contextData.updateTaskColor(task.id, color)}
+                                    onUpdateTaskColor={(color: string) => contextData.updateTaskColor(task.id, color)}
                                     onTaskTextChanges={onTaskTextChanges}
                                 />
                             ))}

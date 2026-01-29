@@ -8,36 +8,43 @@ import { TaskDataContext } from '@/context/task-data.context';
 import { LayoutList } from 'lucide-react';
 
 
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+
 const Content = forwardRef(
-  ({ activeId, dragEndEvent }: { activeId: string, dragEndEvent: boolean }, ref) => {
+  ({ activeId, dragEndEvent }: { activeId: any, dragEndEvent: boolean }, ref) => {
     // const [mockData, setMockData] = useState([]);
     const [mockTaskData, setMockTaskData] = useState([]);
     const contextData = useContext(TaskDataContext);
 
 
     useImperativeHandle(ref, () => ({
-      dragOver: (data) => {
+      dragOver: (data: any) => {
         const { active, over } = data;
         if (!over) return;
 
         const activeId = active.id;
         const overId = over.id;
 
+        // If we are dragging a block, we don't handle dragOver specifically for it here (SortableContext handles it)
+        // Check if we are dragging a task
+        const isActiveTask = contextData.taskBlocks.some((block: any) => block.tasks.some((task: any) => task.id === activeId));
+        if (!isActiveTask) return;
+
         // Find the containers
-        const activeContainer = contextData.taskBlocks.find(block => block.tasks.some(task => task.id === activeId))?.id;
-        const overContainer = contextData.taskBlocks.find(block => block.id === overId)?.id ||
-          contextData.taskBlocks.find(block => block.tasks.some(task => task.id === overId))?.id;
+        const activeContainer = contextData.taskBlocks.find((block: any) => block.tasks.some((task: any) => task.id === activeId))?.id;
+        const overContainer = contextData.taskBlocks.find((block: any) => block.id === overId)?.id ||
+          contextData.taskBlocks.find((block: any) => block.tasks.some((task: any) => task.id === overId))?.id;
 
         if (!activeContainer || !overContainer || activeContainer === overContainer) {
           return;
         }
 
         // Determine new index
-        const activeTaskBlock = contextData.taskBlocks.find(b => b.id === activeContainer);
-        const overTaskBlock = contextData.taskBlocks.find(b => b.id === overContainer);
+        const activeTaskBlock = contextData.taskBlocks.find((b: any) => b.id === activeContainer);
+        const overTaskBlock = contextData.taskBlocks.find((b: any) => b.id === overContainer);
 
-        const activeIndex = activeTaskBlock.tasks.findIndex(t => t.id === activeId);
-        const overIndex = overTaskBlock.tasks.findIndex(t => t.id === overId);
+        const activeIndex = activeTaskBlock.tasks.findIndex((t: any) => t.id === activeId);
+        const overIndex = overTaskBlock.tasks.findIndex((t: any) => t.id === overId);
 
         let newIndex;
         if (overId === overContainer) {
@@ -54,35 +61,58 @@ const Content = forwardRef(
 
         contextData.moveTask(activeId, activeContainer, activeIndex, overContainer, newIndex);
       },
-      dragEnd: (data) => {
+      dragEnd: (data: any) => {
         const { active, over } = data;
         if (!over) return;
-        const activeContainer = contextData.taskBlocks.find(block => block.tasks.some(task => task.id === active.id))?.id;
-        const overContainer = contextData.taskBlocks.find(block => block.id === over.id)?.id ||
-          contextData.taskBlocks.find(block => block.tasks.some(task => task.id === over.id))?.id;
+
+        const activeId = active.id;
+        const overId = over.id;
+
+        // Check if we are reordering blocks
+        const isActiveBlock = contextData.taskBlocks.some((block: any) => block.id === activeId);
+        const isOverBlock = contextData.taskBlocks.some((block: any) => block.id === overId);
+
+        if (isActiveBlock && isOverBlock) {
+          if (activeId !== overId) {
+            contextData.moveBlock(activeId, overId);
+          }
+          return;
+        }
+
+        // Fallback to task reordering
+        const activeContainer = contextData.taskBlocks.find((block: any) => block.tasks.some((task: any) => task.id === activeId))?.id;
+        const overContainer = contextData.taskBlocks.find((block: any) => block.id === overId)?.id ||
+          contextData.taskBlocks.find((block: any) => block.tasks.some((task: any) => task.id === overId))?.id;
 
         if (activeContainer && overContainer && activeContainer === overContainer) {
-          const activeIndex = contextData.taskBlocks.find(b => b.id === activeContainer).tasks.findIndex(t => t.id === active.id);
-          const overIndex = contextData.taskBlocks.find(b => b.id === overContainer).tasks.findIndex(t => t.id === over.id);
+          const activeIndex = contextData.taskBlocks.find((b: any) => b.id === activeContainer).tasks.findIndex((t: any) => t.id === activeId);
+          const overIndex = contextData.taskBlocks.find((b: any) => b.id === overContainer).tasks.findIndex((t: any) => t.id === overId);
 
           if (activeIndex !== overIndex) {
-            contextData.moveTask(active.id, activeContainer, activeIndex, overContainer, overIndex);
+            contextData.moveTask(activeId, activeContainer, activeIndex, overContainer, overIndex);
           }
         }
       }
 
     }))
 
-    const addTaskHandler = (a) => {
+    const addTaskHandler = (a: any) => {
       contextData.addTask(a);
     }
 
 
     return (
       <div className={styles['task-blocks']}>
-        {contextData?.taskBlocks?.length ? contextData.taskBlocks.map((taskBlockData, blockIndex) => (
-          <TaskBlock key={blockIndex} blockId={blockIndex} taskBlockData={taskBlockData} onAddTask={addTaskHandler} activeId={activeId} />
-        )) : (
+        {contextData?.taskBlocks?.length ? (
+          <SortableContext
+            items={contextData.taskBlocks.map((b: any) => b.id)}
+            strategy={horizontalListSortingStrategy}
+          >
+            {contextData.taskBlocks.map((taskBlockData: any, blockIndex: number) => (
+              <TaskBlock key={taskBlockData.id} blockId={blockIndex} taskBlockData={taskBlockData} />
+            ))}
+          </SortableContext>
+        ) : (
           <div className="flex flex-col items-center justify-center w-full min-h-[400px] py-20 px-4 text-center animate-in fade-in zoom-in duration-500">
             <div className="relative mb-6 group">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-purple-500/30 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
