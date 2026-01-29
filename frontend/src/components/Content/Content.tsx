@@ -1,11 +1,11 @@
 // import './style.css'
 
-import CreateTaskBlockBtn from './CreateTaskBlockBtn/CreateTaskBlockBtn';
 import TaskBlock from './TaskBlock/TaskBlock';
 
 import { forwardRef, useContext, useImperativeHandle, useState } from 'react';
 import styles from './style.module.css';
 import { TaskDataContext } from '@/context/task-data.context';
+import { LayoutList } from 'lucide-react';
 
 
 const Content = forwardRef(
@@ -77,25 +77,28 @@ const Content = forwardRef(
       contextData.addTask(a);
     }
 
-    const addTaskBlockHandler = () => {
-      contextData.addTaskBlock();
-    }
-
 
     return (
-      <>
-        <div className={styles['task-blocks']}>
-          {contextData?.taskBlocks?.length ? contextData.taskBlocks.map((taskBlockData, blockIndex) => (
-            <TaskBlock key={blockIndex} blockId={blockIndex} taskBlockData={taskBlockData} onAddTask={addTaskHandler} activeId={activeId} />
-          )
-          ) : <div>No data</div>
-          }
-        </div>
-
-        <div>
-          <CreateTaskBlockBtn onAddTaskBlockClick={addTaskBlockHandler} />
-        </div>
-      </>
+      <div className={styles['task-blocks']}>
+        {contextData?.taskBlocks?.length ? contextData.taskBlocks.map((taskBlockData, blockIndex) => (
+          <TaskBlock key={blockIndex} blockId={blockIndex} taskBlockData={taskBlockData} onAddTask={addTaskHandler} activeId={activeId} />
+        )) : (
+          <div className="flex flex-col items-center justify-center w-full min-h-[400px] py-20 px-4 text-center animate-in fade-in zoom-in duration-500">
+            <div className="relative mb-6 group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-purple-500/30 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative flex items-center justify-center w-24 h-24 rounded-full bg-secondary/50 border border-border group-hover:border-primary/50 transition-colors">
+                <LayoutList className="w-12 h-12 text-foreground/80 group-hover:text-primary transition-colors" />
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold tracking-tight bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">
+              Your workspace is empty
+            </h3>
+            <p className="mt-2 text-foreground/70 max-w-[280px] text-sm leading-relaxed">
+              Add your first list to start organizing your thoughts and boost your productivity.
+            </p>
+          </div>
+        )}
+      </div>
     )
 
   }

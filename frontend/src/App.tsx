@@ -70,10 +70,16 @@ function App() {
               <TaskCard
                 text={activeTask.text}
                 id={activeTask.id}
+                color={activeTask.color}
                 onRemoveTask={() => { }}
+                onUpdateTaskColor={() => { }}
                 onTaskTextChanges={() => { }}
+                style={{}}
+                listeners={{}}
+                attributes={{}}
+                setNodeRef={() => { }}
                 isDragging={true}
-                className="opacity-80 rotate-2 scale-105 shadow-xl cursor-grabbing bg-background/90 backdrop-blur-sm border-primary/50"
+                className="opacity-90 rotate-1 scale-105 shadow-2xl shadow-primary/20 backdrop-blur-md border-primary/30 ring-2 ring-primary/20 cursor-grabbing"
               />
             ) : null}
           </DragOverlay>

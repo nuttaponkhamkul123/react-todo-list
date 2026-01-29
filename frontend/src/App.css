@@ -5,15 +5,8 @@ body {
 }
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
   height: 100vh;
-
-
-  /* &.gradient-background {
-  } */
+  width: 100%;
 }
 
 .logo {
@@ -49,12 +42,8 @@ body {
 .outer {
   display: flex;
   flex-flow: column;
-  gap: 20px;
-  max-height: 80%;
   height: 100%;
-  overflow-y: auto;
-
-
+  overflow-y: hidden;
 }
 
 @keyframes logo-spin {

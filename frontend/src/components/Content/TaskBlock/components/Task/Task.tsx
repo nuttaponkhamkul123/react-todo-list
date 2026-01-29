@@ -34,7 +34,8 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
 
   const cardStyle = {
     ...style,
-    backgroundColor: color || undefined, // undefined falls back to CSS class
+    borderLeft: color && color !== '#ffffff' ? `4px solid ${color}` : undefined,
+    backgroundColor: color && color !== '#ffffff' ? `${color}15` : undefined, // Very light tint
   };
 
   return (
@@ -42,8 +43,8 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
       ref={setNodeRef}
       style={cardStyle}
       className={`
-                group relative flex items-center gap-2 p-3 rounded-xl border border-border/40 bg-card shadow-sm hover:shadow-md transition-all duration-200
-                ${isDragging ? 'dragging ring-2 ring-primary/20 rotate-2' : 'hover:border-primary/20'}
+                group relative flex items-center gap-2 p-3.5 rounded-2xl border border-border/40 bg-card/80 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300
+                ${isDragging ? 'dragging ring-2 ring-primary/20 rotate-1 scale-105 z-50 opacity-90' : 'hover:border-primary/30'}
                 ${className || ''}
             `}
     >
