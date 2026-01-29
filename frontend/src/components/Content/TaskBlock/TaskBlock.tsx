@@ -86,8 +86,10 @@ export function TaskBlock({ taskBlockData, onAddTask, blockId, activeId }) {
                                 key={task.id}
                                 id={task.id}
                                 text={task.text}
+                                color={task.color}
                                 data={task}
                                 onRemoveTask={() => contextData.removeTask(task)}
+                                onUpdateTaskColor={(color) => contextData.updateTaskColor(task.id, color)}
                                 onTaskTextChanges={onTaskTextChanges}
                             />
                         ))}

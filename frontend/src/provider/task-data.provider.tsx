@@ -88,13 +88,32 @@ export const TaskDataProvider = ({ children }) => {
             return newBlocks;
         });
     }
+
+    const updateTaskColor = (taskId, color) => {
+        setTaskBlocks((prev) => {
+            return prev.map(block => {
+                const taskIndex = block.tasks.findIndex(t => t.id === taskId);
+                if (taskIndex === -1) return block;
+
+                const newBlock = { ...block };
+                newBlock.tasks = [...block.tasks];
+                newBlock.tasks[taskIndex] = {
+                    ...newBlock.tasks[taskIndex],
+                    color // Add or update color
+                };
+                return newBlock;
+            });
+        });
+    }
+
     const data = {
         taskBlocks,
         addTaskBlock,
         addTask,
         removeTask,
         setTaskBlocks,
-        moveTask
+        moveTask,
+        updateTaskColor
     }
 
     return (
