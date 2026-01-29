@@ -11,6 +11,7 @@ import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-
 import { CSS } from '@dnd-kit/utilities';
 import { useMemo } from 'react';
 import { useTaskData } from '@/context/task-data.context';
+import { isDark } from '@/lib/colors';
 
 
 const PRESET_COLORS = [
@@ -97,11 +98,14 @@ export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, bloc
         });
     }
 
+    const blockColor = taskBlockData.color && taskBlockData.color !== '#ffffff' ? taskBlockData.color : null;
+    const headerTextColor = blockColor ? blockColor : 'inherit';
+
     const blockStyle = {
         transform: CSS.Translate.toString(transform),
         transition,
-        borderLeft: taskBlockData.color && taskBlockData.color !== '#ffffff' ? `4px solid ${taskBlockData.color}` : undefined,
-        backgroundColor: taskBlockData.color && taskBlockData.color !== '#ffffff' ? `${taskBlockData.color}10` : undefined,
+        borderLeft: blockColor ? `4px solid ${blockColor}` : undefined,
+        backgroundColor: blockColor ? `${blockColor}12` : undefined,
     };
 
     return (
@@ -117,7 +121,8 @@ export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, bloc
             <div className="pt-5 px-4 mb-4 flex items-center justify-between gap-1 group">
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                     <div
-                        className="p-1 rounded-md text-muted-foreground/60 hover:text-primary hover:bg-primary/10 cursor-grab active:cursor-grabbing transition-colors shrink-0"
+                        className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 cursor-grab active:cursor-grabbing transition-colors shrink-0"
+                        style={{ color: blockColor || undefined }}
                         {...attributes}
                         {...listeners}
                     >
@@ -125,7 +130,8 @@ export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, bloc
                     </div>
 
                     <input
-                        className="font-bold text-lg bg-transparent outline-none text-foreground w-full placeholder:text-muted-foreground/50 truncate cursor-text"
+                        className="font-semibold text-lg bg-transparent outline-none w-full placeholder:text-muted-foreground/50 truncate cursor-text"
+                        style={{ color: headerTextColor }}
                         onChange={onTaskBlockTextChanges}
                         value={taskBlockData.blockName}
                         placeholder="List Title"
@@ -135,7 +141,10 @@ export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, bloc
                 <div className="shrink-0">
                     <Popover>
                         <PopoverTrigger asChild>
-                            <button className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground/40 hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+                            <button
+                                className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                style={{ color: blockColor || undefined }}
+                            >
                                 <Palette size={18} />
                             </button>
                         </PopoverTrigger>
@@ -183,9 +192,16 @@ export function TaskBlock({ taskBlockData, blockId }: { taskBlockData: any, bloc
                 <div className="sticky bottom-0 z-10 pb-4 bg-transparent pointer-events-none">
                     <div
                         onClick={addTask}
-                        className="flex items-center gap-2 p-2.5 rounded-xl bg-white hover:bg-primary/20 text-primary transition-all cursor-pointer text-sm font-bold select-none border border-primary/20 hover:border-primary/40 pointer-events-auto shadow-md backdrop-blur-md"
+                        style={{
+                            color: blockColor || 'var(--primary)',
+                            borderColor: blockColor ? `${blockColor}40` : 'var(--primary-foreground/20)',
+                        }}
+                        className="flex items-center gap-2 p-2.5 rounded-xl bg-white hover:bg-primary/5 transition-all cursor-pointer text-sm font-medium select-none border pointer-events-auto shadow-md backdrop-blur-md"
                     >
-                        <span className="text-xl leading-none font-black">+</span> Add a task
+                        <span
+                            className="text-xl leading-none font-bold"
+                            style={{ color: blockColor || 'inherit' }}
+                        >+</span> Add a task
                     </div>
                 </div>
             </div>

@@ -17,7 +17,7 @@ const PRESET_COLORS = [
   '#ec4899', // Pink 500
 ];
 
-export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onTaskTextChanges, style, className, listeners, attributes, setNodeRef, isDragging }) {
+export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onTaskTextChanges, style, className, listeners, attributes, setNodeRef, isDragging }: any) {
   const [isCardFocusing, setIsCardFocusing] = useState(false);
 
   const onTaskFocus = () => {
@@ -27,7 +27,7 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
     setIsCardFocusing(false);
   }
   // eslint-disable-next-line no-unused-vars
-  const handleTextChange = (event) => {
+  const handleTextChange = (event: any) => {
     const text = event.target.value;
     onTaskTextChanges(id, text);
   }
@@ -48,9 +48,14 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
                 ${className || ''}
             `}
     >
-      <div {...listeners} {...attributes} className="cursor-grab touch-none text-muted-foreground group-hover:text-foreground transition-colors p-1 -ml-1 hover:bg-muted/50 rounded-md">
+      <div
+        {...listeners}
+        {...attributes}
+        className="cursor-grab touch-none transition-colors p-1 -ml-1 hover:bg-muted/50 rounded-md"
+        style={{ color: color && color !== '#ffffff' ? color : 'inherit', opacity: 0.8 }}
+      >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fillRule="evenodd" clipRule="evenodd" d="M5 3.5C5 3.22386 4.77614 3 4.5 3C4.22386 3 4 3.22386 4 3.5V12.5C4 12.7761 4.22386 13 4.5 13C4.77614 13 5 12.7761 5 12.5V3.5ZM8.5 3C8.77614 3 9 3.22386 9 3.5V12.5C9 12.7761 8.77614 13 8.5 13C8.22386 13 8 12.7761 8 12.5V3.5C8 3.22386 8.22386 3 8.5 3ZM12.5 3C12.7761 3 13 3.22386 13 3.5V12.5C13 12.7761 12.7761 13 12.5 13C12.22386 13 12 12.7761 12 12.5V3.5C12 3.22386 12.22386 3 12.5 3Z" fill="currentColor" opacity="0.5" />
+          <path fillRule="evenodd" clipRule="evenodd" d="M5 3.5C5 3.22386 4.77614 3 4.5 3C4.22386 3 4 3.22386 4 3.5V12.5C4 12.7761 4.22386 13 4.5 13C4.77614 13 5 12.7761 5 12.5V3.5ZM8.5 3C8.77614 3 9 3.22386 9 3.5V12.5C9 12.7761 8.77614 13 8.5 13C8.22386 13 8 12.7761 8 12.5V3.5C8 3.22386 8.22386 3 8.5 3ZM12.5 3C12.7761 3 13 3.22386 13 3.5V12.5C13 12.7761 12.7761 13 12.5 13C12.22386 13 12 12.7761 12 12.5V3.5C12 3.22386 12.22386 3 12.5 3Z" fill="currentColor" />
         </svg>
       </div>
 
@@ -59,7 +64,8 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
         onFocus={onTaskFocus}
         onBlur={onTaskBlur}
         value={text}
-        className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-foreground placeholder:text-muted-foreground/50 truncate min-w-0"
+        className="flex-1 bg-transparent border-none outline-none text-[15px] font-normal placeholder:text-muted-foreground/50 truncate min-w-0"
+        style={{ color: color && color !== '#ffffff' ? color : 'inherit' }}
         placeholder="Type a task..."
       />
 
@@ -69,14 +75,15 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className="h-7 w-7 hover:bg-muted transition-colors"
+              style={{ color: color && color !== '#ffffff' ? color : 'inherit' }}
             >
               <Palette className="h-4 w-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-48 p-2" align="end">
             <div className="grid grid-cols-4 gap-2">
-              {PRESET_COLORS.map((c) => (
+              {PRESET_COLORS.map((c: any) => (
                 <div
                   key={c}
                   className="h-8 w-8 rounded-lg cursor-pointer border-2 border-border shadow-md hover:scale-110 hover:border-primary/50 transition-all"
@@ -91,7 +98,8 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
         <Button
           variant="ghost"
           size="icon"
-          className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+          className="h-7 w-7 hover:bg-destructive/10 transition-colors"
+          style={{ color: color && color !== '#ffffff' ? color : 'inherit' }}
           onClick={onRemoveTask}
         >
           <Trash2 className="h-4 w-4" />
@@ -102,7 +110,7 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
 }
 
 
-function Task(props) {
+function Task(props: any) {
   // const [isCardFocusing, setIsCardFocusing] = useState(false);
   // const 
   const {
