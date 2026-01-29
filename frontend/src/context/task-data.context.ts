@@ -1,3 +1,5 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
-export const TaskDataContext = createContext([]);
+export const TaskDataContext = createContext<any>([]);
+
+export const useTaskData = () => useContext(TaskDataContext);

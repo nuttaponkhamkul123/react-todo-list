@@ -7,14 +7,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 const PRESET_COLORS = [
   '#ffffff', // Default
-  '#fee2e2', // Red
-  '#ffedd5', // Orange
-  '#fef9c3', // Yellow
-  '#dcfce7', // Green
-  '#dbeafe', // Blue
-  '#e0e7ff', // Indigo
-  '#f3e8ff', // Purple
-  '#fce7f3', // Pink
+  '#ef4444', // Red 500
+  '#f59e0b', // Amber 500
+  '#eab308', // Yellow 500
+  '#22c55e', // Green 500
+  '#3b82f6', // Blue 500
+  '#6366f1', // Indigo 500
+  '#a855f7', // Purple 500
+  '#ec4899', // Pink 500
 ];
 
 export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onTaskTextChanges, style, className, listeners, attributes, setNodeRef, isDragging }) {
@@ -29,7 +29,7 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
   // eslint-disable-next-line no-unused-vars
   const handleTextChange = (event) => {
     const text = event.target.value;
-    onTaskTextChanges({ text, index: id });
+    onTaskTextChanges(id, text);
   }
 
   const cardStyle = {
@@ -43,7 +43,7 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
       ref={setNodeRef}
       style={cardStyle}
       className={`
-                group relative flex items-center gap-2 p-3.5 rounded-2xl border border-border/40 bg-card/80 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300
+                group relative flex items-center gap-2 py-5 px-4 rounded-2xl border border-border/40 bg-card/80 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300
                 ${isDragging ? 'dragging ring-2 ring-primary/20 rotate-1 scale-105 z-50 opacity-90' : 'hover:border-primary/30'}
                 ${className || ''}
             `}
@@ -79,7 +79,7 @@ export function TaskCard({ text, id, color, onRemoveTask, onUpdateTaskColor, onT
               {PRESET_COLORS.map((c) => (
                 <div
                   key={c}
-                  className="h-6 w-6 rounded-full cursor-pointer border border-border shadow-sm hover:scale-110 transition-transform"
+                  className="h-8 w-8 rounded-lg cursor-pointer border-2 border-border shadow-md hover:scale-110 hover:border-primary/50 transition-all"
                   style={{ backgroundColor: c }}
                   onClick={() => onUpdateTaskColor && onUpdateTaskColor(c)}
                 />

@@ -3,8 +3,8 @@ import { TaskDataContext } from '../context/task-data.context'
 import { v4 as uuidv4 } from 'uuid';
 
 
-export const TaskDataProvider = ({ children }) => {
-    const [taskBlocks, setTaskBlocks] = useState([]);
+export const TaskDataProvider = ({ children }: { children: React.ReactNode }) => {
+    const [taskBlocks, setTaskBlocks] = useState<any[]>([]);
 
 
 
@@ -106,14 +106,24 @@ export const TaskDataProvider = ({ children }) => {
         });
     }
 
-    const data = {
+    const updateBlockColor = (blockId: string, color: string) => {
+        setTaskBlocks((prev: any[]) => {
+            return prev.map(block => {
+                if (block.id !== blockId) return block;
+                return { ...block, color };
+            });
+        });
+    }
+
+    const data: any = {
         taskBlocks,
         addTaskBlock,
         addTask,
         removeTask,
         setTaskBlocks,
         moveTask,
-        updateTaskColor
+        updateTaskColor,
+        updateBlockColor
     }
 
     return (
